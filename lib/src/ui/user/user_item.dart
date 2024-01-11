@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class UserItem extends StatelessWidget {
@@ -48,18 +50,23 @@ Widget _userContactButton() {
 }
 
 Widget _userProfile(avatarUrl, name, email, phoneNumber) {
+  // bool isAvatarUrlNull = avatarUrl == null;
+  // debugPrint(isAvatarUrlNull.toString());
+  debugPrint(avatarUrl);
   return Row(
     children: [
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
-          child: Image.network(
-            avatarUrl,
-            height: 50.0,
-            width: 50.0,
-            fit: BoxFit.cover,
-          ),
+          child: avatarUrl != null
+              ? Image.network(
+                  avatarUrl,
+                  height: 50.0,
+                  width: 50.0,
+                  fit: BoxFit.cover,
+                )
+              : const Text('No Image'),
         ),
       ),
       Column(
