@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_app/src/ui/user/add_contact.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test_app/src/blocs/events/user_events.dart';
+import 'package:flutter_test_app/src/blocs/user_bloc.dart';
+import 'package:flutter_test_app/src/blocs/states/user_states.dart';
+import 'package:flutter_test_app/src/models/request/users_request.dart';
+import 'package:flutter_test_app/src/ui/user/add_user.dart';
 import 'package:flutter_test_app/src/ui/user/user_contact_item.dart';
+// import 'package:flutter_test_app/api/get_users_api.dart';
 
 import '../ui/side_panel/side_panel.dart';
 
@@ -27,85 +33,60 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(leading: Builder(builder: (BuildContext context) {
-          return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip);
-        })),
-        drawer: const SidePanel(),
-        floatingActionButton: FloatingActionButton(
-          shape: const CircleBorder(),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddContact()),
-            );
-          },
-          tooltip: 'Add Contact',
-          child: const Icon(Icons.add),
-        ),
-        body: const CustomScrollView(slivers: [
-          SliverFillRemaining(
-              hasScrollBody: false,
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                    UserContactItem(
-                        name: 'aden',
-                        email: 'adenteo@gmail.com',
-                        avatarUrl: 'https://picsum.photos/250?image=9'),
-                  ],
-                ),
-              ))
-        ]));
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (context) => UserBloc())],
+      child: Scaffold(
+          appBar: AppBar(leading: Builder(builder: (BuildContext context) {
+            return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                tooltip:
+                    MaterialLocalizations.of(context).openAppDrawerTooltip);
+          })),
+          drawer: const SidePanel(),
+          floatingActionButton: FloatingActionButton(
+            shape: const CircleBorder(),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddUser()),
+              );
+            },
+            tooltip: 'Add Contact',
+            child: const Icon(Icons.add),
+          ),
+          body: _blocBody()),
+    );
   }
+}
+
+Widget _blocBody() {
+  return BlocProvider(
+    create: (context) => UserBloc()..add(FetchUsers()),
+    child: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+      if (state is UserInitial) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (state is UserLoading) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (state is UserLoaded) {
+        return _userScrollList(state.users);
+      } else if (state is UserError) {
+        return const Center(child: Text('Error'));
+      }
+      return Container();
+    }),
+  );
+}
+
+Widget _userScrollList(List<User> users) {
+  return ListView.builder(
+      itemCount: users.length,
+      itemBuilder: (context, index) {
+        return UserContactItem(
+            name: '${users[index].firstName} ${users[index].lastName}',
+            email: '${users[index].email}',
+            avatarUrl: '${users[index].avatar}');
+      });
 }

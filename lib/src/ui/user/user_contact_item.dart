@@ -16,72 +16,57 @@ class UserContactItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _UserProfile(avatarUrl: avatarUrl, name: name, email: email),
-        _UserContactButton(),
+        _userProfile(avatarUrl, name, email),
+        _userContactButton(),
         const Divider(color: Colors.black),
       ],
     );
   }
 }
 
-class _UserContactButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        OutlinedButton(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
+Widget _userContactButton() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      OutlinedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
             ),
           ),
-          onPressed: () {
-            debugPrint('Received click');
-          },
-          child: const Text('Call'),
         ),
-      ],
-    );
-  }
+        onPressed: () {
+          debugPrint('Received click');
+        },
+        child: const Text('Call'),
+      ),
+    ],
+  );
 }
 
-class _UserProfile extends StatelessWidget {
-  const _UserProfile({
-    required this.avatarUrl,
-    required this.name,
-    required this.email,
-  });
-
-  final String avatarUrl;
-  final String name;
-  final String email;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: Image.network(
-              avatarUrl,
-              height: 50.0,
-              width: 50.0,
-              fit: BoxFit.cover,
-            ),
+Widget _userProfile(avatarUrl, name, email) {
+  return Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Image.network(
+            avatarUrl,
+            height: 50.0,
+            width: 50.0,
+            fit: BoxFit.cover,
           ),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(name),
-            Text(email),
-          ],
-        ),
-      ],
-    );
-  }
+      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(name),
+          Text(email),
+        ],
+      ),
+    ],
+  );
 }
