@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 
-class UserContactItem extends StatelessWidget {
-  const UserContactItem({
+class UserItem extends StatelessWidget {
+  const UserItem({
     super.key,
     required this.name,
     required this.email,
     required this.avatarUrl,
+    required this.phoneNumber,
   });
 
   final String name;
   final String email;
   final String avatarUrl;
+  final String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _userProfile(avatarUrl, name, email),
+        _userProfile(avatarUrl, name, email, phoneNumber),
         _userContactButton(),
         const Divider(color: Colors.black),
       ],
@@ -45,7 +47,7 @@ Widget _userContactButton() {
   );
 }
 
-Widget _userProfile(avatarUrl, name, email) {
+Widget _userProfile(avatarUrl, name, email, phoneNumber) {
   return Row(
     children: [
       Padding(
@@ -62,10 +64,7 @@ Widget _userProfile(avatarUrl, name, email) {
       ),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(name),
-          Text(email),
-        ],
+        children: [Text(name), Text(email), Text('+65 $phoneNumber')],
       ),
     ],
   );
