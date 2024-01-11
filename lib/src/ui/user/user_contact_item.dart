@@ -30,21 +30,18 @@ class _UserContactButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 20.0),
-          child: OutlinedButton(
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
+        OutlinedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
             ),
-            onPressed: () {
-              debugPrint('Received click');
-            },
-            child: const Text('Call'),
           ),
+          onPressed: () {
+            debugPrint('Received click');
+          },
+          child: const Text('Call'),
         ),
       ],
     );

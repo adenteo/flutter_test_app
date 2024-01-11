@@ -51,57 +51,60 @@ class HomePage extends StatelessWidget {
         body: const CustomScrollView(slivers: [
           SliverFillRemaining(
               hasScrollBody: false,
-              child: Column(
-                children: [
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                  UserContactItem(
-                      name: 'aden',
-                      email: 'adenteo@gmail.com',
-                      avatarUrl: 'https://picsum.photos/250?image=9'),
-                ],
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                    UserContactItem(
+                        name: 'aden',
+                        email: 'adenteo@gmail.com',
+                        avatarUrl: 'https://picsum.photos/250?image=9'),
+                  ],
+                ),
               ))
         ]));
   }
