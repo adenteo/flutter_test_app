@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class UserItem extends StatelessWidget {
@@ -48,6 +50,11 @@ Widget _userContactButton() {
 }
 
 Widget _userProfile(avatar, name, email, phoneNumber) {
+  bool isNetworkImage(String? imagePath) {
+    return imagePath != null &&
+        (imagePath.startsWith('http://') || imagePath.startsWith('https://'));
+  }
+
   return Row(
     children: [
       Padding(
@@ -55,8 +62,13 @@ Widget _userProfile(avatar, name, email, phoneNumber) {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
           child: avatar == null
-              ? const Text('No Image')
-              : Image.network(avatar, width: 50, height: 50),
+              ? const SizedBox(
+                  width: 50, height: 50, child: Center(child: Text('No Image')))
+              : isNetworkImage(avatar)
+                  ? Image.network(avatar,
+                      width: 50, height: 50, fit: BoxFit.cover)
+                  : Image.file(File(avatar),
+                      width: 50, height: 50, fit: BoxFit.cover),
         ),
       ),
       Column(

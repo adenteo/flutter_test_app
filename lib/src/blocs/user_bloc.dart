@@ -6,6 +6,8 @@ import 'states/user_states.dart';
 import 'events/user_events.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+//email, upload of image, call functionality, save in localStorage.
+
 class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc() : super(UserInitial()) {
     on<FetchUsers>(
@@ -28,7 +30,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
               List<User>.from((state as UserLoaded).users);
           // Create a new User object
           final User newUser = User(
-            firstName: event.userName,
+            firstName: event.fname,
+            lastName: event.lname,
+            email: event.email,
+            avatar: event.image,
           );
           newUser.phoneNumber = newUser
               .generateRandomPhoneNumber(); // Add the new user to the list

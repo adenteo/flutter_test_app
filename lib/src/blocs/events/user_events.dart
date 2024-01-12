@@ -3,7 +3,10 @@ abstract class UserEvent {}
 class FetchUsers extends UserEvent {}
 
 class AddUser extends UserEvent {
-  final String userName;
+  final String fname;
+  final String lname;
+  final String email;
+  final String? image;
 
-  AddUser(this.userName);
+  AddUser(this.fname, this.lname, this.email, this.image);
 }
