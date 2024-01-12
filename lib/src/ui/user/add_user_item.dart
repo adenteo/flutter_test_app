@@ -76,22 +76,25 @@ class AddUserItemState extends State<AddUserItem> {
       width: inputFieldWidth,
       child: Row(
         children: [
-          if (_image != null)
-            Image.file(
-              File(_image!.path),
-              width: 100,
-              height: 100,
-              fit: BoxFit.cover,
-            )
-          else
-            const SizedBox(
-                width: 100,
-                height: 100,
-                child: Center(child: Text('No Image'))),
+          _image != null
+              ? (Image.file(
+                  File(_image!.path),
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ))
+              : const SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Center(child: Text('No Image'))),
           const SizedBox(width: 10),
-          OutlinedButton(
+          ElevatedButton(
             onPressed: _pickImage,
-            child: const Text('Upload Image'),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(20),
+            ),
+            child: const Icon(Icons.add_a_photo),
           ),
         ],
       ),
@@ -100,11 +103,13 @@ class AddUserItemState extends State<AddUserItem> {
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile =
-        await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = pickedFile;
-    });
+    final ImageSource? source = await _showImageSourceDialog(context);
+    if (source != null) {
+      final XFile? pickedFile = await picker.pickImage(source: source);
+      setState(() {
+        _image = pickedFile;
+      });
+    }
   }
 
   Widget _createContactButton(BuildContext context) {
@@ -150,6 +155,25 @@ class AddUserItemState extends State<AddUserItem> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<ImageSource?> _showImageSourceDialog(BuildContext context) async {
+    return showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Choose Image Source"),
+        actions: [
+          TextButton(
+            child: const Text("Camera"),
+            onPressed: () => Navigator.pop(context, ImageSource.camera),
+          ),
+          TextButton(
+            child: const Text("Gallery"),
+            onPressed: () => Navigator.pop(context, ImageSource.gallery),
+          ),
+        ],
+      ),
     );
   }
 
