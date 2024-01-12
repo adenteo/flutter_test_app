@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class UserItem extends StatelessWidget {
@@ -7,20 +5,20 @@ class UserItem extends StatelessWidget {
     super.key,
     required this.name,
     required this.email,
-    required this.avatarUrl,
     required this.phoneNumber,
+    this.avatar,
   });
 
   final String name;
   final String email;
-  final String avatarUrl;
   final String phoneNumber;
+  final String? avatar;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _userProfile(avatarUrl, name, email, phoneNumber),
+        _userProfile(avatar, name, email, phoneNumber),
         _userContactButton(),
         const Divider(color: Colors.black),
       ],
@@ -41,7 +39,7 @@ Widget _userContactButton() {
           ),
         ),
         onPressed: () {
-          debugPrint('Received click');
+          debugPrint('Received Call Click');
         },
         child: const Text('Call'),
       ),
@@ -49,24 +47,16 @@ Widget _userContactButton() {
   );
 }
 
-Widget _userProfile(avatarUrl, name, email, phoneNumber) {
-  // bool isAvatarUrlNull = avatarUrl == null;
-  // debugPrint(isAvatarUrlNull.toString());
-  debugPrint(avatarUrl);
+Widget _userProfile(avatar, name, email, phoneNumber) {
   return Row(
     children: [
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
-          child: avatarUrl != null
-              ? Image.network(
-                  avatarUrl,
-                  height: 50.0,
-                  width: 50.0,
-                  fit: BoxFit.cover,
-                )
-              : const Text('No Image'),
+          child: avatar == null
+              ? const Text('No Image')
+              : Image.network(avatar, width: 50, height: 50),
         ),
       ),
       Column(

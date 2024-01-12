@@ -85,7 +85,7 @@ Widget _userScrollList(List<User> users) {
         return UserItem(
             name: '${users[index].firstName} ${users[index].lastName}',
             email: '${users[index].email}',
-            avatarUrl: '${users[index].avatar}',
+            avatar: users[index].avatar,
             phoneNumber: '${users[index].phoneNumber}');
       });
 }

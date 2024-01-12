@@ -45,9 +45,9 @@ class AddUserItemState extends State<AddUserItem> {
         ),
       ),
       onPressed: () {
-        debugPrint('Received click');
         var userName = _nameController.text;
         context.read<UserBloc>().add(AddUser(userName));
+        Navigator.pop(context);
       },
       child: const Text('Create'),
     );

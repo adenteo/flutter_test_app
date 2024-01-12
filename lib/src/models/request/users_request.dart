@@ -22,11 +22,11 @@ class User {
     firstName = json['first_name'];
     lastName = json['last_name'];
     avatar = json['avatar'];
-    phoneNumber = _generateRandomPhoneNumber(); // Generate random phoneNumber
+    phoneNumber = generateRandomPhoneNumber(); // Generate random phoneNumber
   }
 
   // Method to generate a random 8-digit phoneNumber
-  String _generateRandomPhoneNumber() {
+  String generateRandomPhoneNumber() {
     var rng = Random();
     var number = '';
     for (var i = 0; i < 8; i++) {

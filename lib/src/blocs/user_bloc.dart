@@ -12,29 +12,26 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       (event, emit) async {
         emit(UserLoading());
         try {
-          debugPrint('FetchUsers');
           final users = await fetchUsers();
-          debugPrint('got users');
           emit(UserLoaded(users));
         } catch (e) {
-          debugPrint('$e');
           emit(UserError());
         }
       },
     );
     on<AddUser>(
       (event, emit) async {
-        debugPrint('Add User ${event.userName}');
         // Check if the current state has loaded users
         if (state is UserLoaded) {
           // Copy the current list of users
           final List<User> updatedUsers =
               List<User>.from((state as UserLoaded).users);
-          debugPrint('updatedUsers: $updatedUsers');
-          // Create a new User object (assuming a constructor that takes userName)
-          final User newUser = User(firstName: event.userName);
-
-          // Add the new user to the list
+          // Create a new User object
+          final User newUser = User(
+            firstName: event.userName,
+          );
+          newUser.phoneNumber = newUser
+              .generateRandomPhoneNumber(); // Add the new user to the list
           updatedUsers.add(newUser);
 
           // Emit the updated state
