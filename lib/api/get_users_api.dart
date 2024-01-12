@@ -26,11 +26,15 @@ Future<List<User>> fetchUsers() async {
 Future<List<User>> getUsersFromPrefs() async {
   final prefs = await SharedPreferences.getInstance();
   final String? usersJsonString = prefs.getString('users');
-  debugPrint(usersJsonString);
   List<User> users = [];
   if (usersJsonString != null && usersJsonString.isNotEmpty) {
     final List<dynamic> usersMapList = json.decode(usersJsonString);
     users = usersMapList.map((userMap) => User.fromJson(userMap)).toList();
   }
   return users;
+}
+
+Future<void> clearUsersFromPrefs() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('users');
 }

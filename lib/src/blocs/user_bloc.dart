@@ -47,7 +47,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           // Emit the updated state
           emit(UserLoaded(updatedUsers));
         } else {
-          debugPrint('state is not UserLoaded');
           // Handle the case where users are not yet loaded or there's an error
           // For example, you might want to fetch the users first or emit an error state
         }

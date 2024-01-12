@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test_app/api/get_users_api.dart';
 import 'package:flutter_test_app/src/blocs/events/user_events.dart';
 import 'package:flutter_test_app/src/blocs/user_bloc.dart';
 import 'package:flutter_test_app/src/blocs/states/user_states.dart';
@@ -70,7 +71,7 @@ Widget _blocBody() {
     } else if (state is UserLoading) {
       return const Center(child: CircularProgressIndicator());
     } else if (state is UserLoaded) {
-      return _userScrollList(state.users);
+      return _userScrollList(context, state.users);
     } else if (state is UserError) {
       return const Center(child: Text('Error'));
     }
@@ -78,17 +79,26 @@ Widget _blocBody() {
   });
 }
 
-Widget _userScrollList(List<User> users) {
+Widget _userScrollList(BuildContext context, List<User> users) {
   return Padding(
     padding: const EdgeInsets.all(20.0),
-    child: ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          return UserItem(
-              name: '${users[index].firstName} ${users[index].lastName}',
-              email: '${users[index].email}',
-              avatar: users[index].avatar,
-              phoneNumber: '${users[index].phoneNumber}');
-        }),
+    child: RefreshIndicator(
+      onRefresh: () async {
+        await clearUsersFromPrefs();
+        if (!context.mounted) {
+          return;
+        }
+        context.read<UserBloc>().add(FetchUsers());
+      },
+      child: ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            return UserItem(
+                name: '${users[index].firstName} ${users[index].lastName}',
+                email: '${users[index].email}',
+                avatar: users[index].avatar,
+                phoneNumber: '${users[index].phoneNumber}');
+          }),
+    ),
   );
 }
