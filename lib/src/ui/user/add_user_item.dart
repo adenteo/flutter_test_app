@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test_app/src/blocs/events/user_events.dart';
 import 'package:flutter_test_app/src/blocs/user_bloc.dart';
+import 'package:flutter_test_app/src/validators/user_validator.dart';
 import 'package:image_picker/image_picker.dart'; // Import image_picker package
 
 class AddUserItem extends StatefulWidget {
@@ -18,7 +19,7 @@ class AddUserItemState extends State<AddUserItem> {
   final TextEditingController _lnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   XFile? _image; // For storing the selected image
-
+  final _formKey = GlobalKey<FormState>();
   static const double inputFieldWidth = 250.0;
 
   @override
@@ -37,19 +38,24 @@ class AddUserItemState extends State<AddUserItem> {
                   (MediaQuery.of(context).padding.top + kToolbarHeight),
             ),
             child: IntrinsicHeight(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _contactInput('First Name', _fnameController),
-                  const SizedBox(height: 10),
-                  _contactInput('Last Name', _lnameController),
-                  const SizedBox(height: 10),
-                  _contactInput('Email', _emailController),
-                  const SizedBox(height: 10),
-                  _imageUploadSection(),
-                  const SizedBox(height: 20),
-                  _createContactButton(context)
-                ],
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _contactInput(
+                        'First Name*', _fnameController, nameValidator),
+                    const SizedBox(height: 10),
+                    _contactInput(
+                        'Last Name*', _lnameController, nameValidator),
+                    const SizedBox(height: 10),
+                    _contactInput('Email*', _emailController, emailValidator),
+                    const SizedBox(height: 10),
+                    _imageUploadSection(),
+                    const SizedBox(height: 20),
+                    _createContactButton(context)
+                  ],
+                ),
               ),
             ),
           ),
@@ -111,30 +117,31 @@ class AddUserItemState extends State<AddUserItem> {
         ),
       ),
       onPressed: () {
-        final fName = _fnameController.text;
-        final lname = _lnameController.text;
-        final email = _emailController.text;
+        if (_formKey.currentState!.validate()) {
+          final fName = _fnameController.text;
+          final lname = _lnameController.text;
+          final email = _emailController.text;
 
-        context
-            .read<UserBloc>()
-            .add(AddUser(fName, lname, email, _image?.path));
-        Navigator.pop(context);
+          context
+              .read<UserBloc>()
+              .add(AddUser(fName, lname, email, _image?.path));
+          Navigator.pop(context);
+        }
       },
       child: const Text('Create'),
     );
   }
 
-  Widget _contactInput(
-    String label,
-    TextEditingController controller,
-  ) {
+  Widget _contactInput(String label, TextEditingController controller,
+      String? Function(String?) validator) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label),
         SizedBox(
           width: inputFieldWidth, // Use the defined width
-          child: TextField(
+          child: TextFormField(
+            validator: validator,
             controller: controller,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),

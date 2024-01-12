@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import "package:flutter/material.dart";
 import "package:flutter_test_app/api/get_users_api.dart";
 import 'package:flutter_test_app/src/models/request/users_request.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'states/user_states.dart';
 import 'events/user_events.dart';
@@ -35,9 +38,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
             email: event.email,
             avatar: event.image,
           );
+          // TODO: Should only generate a random phone number if the user doesn't have one
           newUser.phoneNumber = newUser
               .generateRandomPhoneNumber(); // Add the new user to the list
           updatedUsers.add(newUser);
+
+          await _storeUserInLocalStorage(newUser);
 
           // Emit the updated state
           emit(UserLoaded(updatedUsers));
@@ -49,4 +55,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       },
     );
   }
+}
+
+Future<void> _storeUserInLocalStorage(User user) async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? usersJsonString = prefs.getString('users');
+  List<User> users = [];
+
+  if (usersJsonString != null && usersJsonString.isNotEmpty) {
+    final List<dynamic> usersMapList = json.decode(usersJsonString);
+    users = usersMapList.map((userMap) => User.fromJson(userMap)).toList();
+  }
+  users.add(user);
+  final usersMapList = users.map((user) => user.toMap()).toList();
+  final usersJson = json.encode(usersMapList);
+  await prefs.setString('users', usersJson);
 }

@@ -79,13 +79,16 @@ Widget _blocBody() {
 }
 
 Widget _userScrollList(List<User> users) {
-  return ListView.builder(
-      itemCount: users.length,
-      itemBuilder: (context, index) {
-        return UserItem(
-            name: '${users[index].firstName} ${users[index].lastName}',
-            email: '${users[index].email}',
-            avatar: users[index].avatar,
-            phoneNumber: '${users[index].phoneNumber}');
-      });
+  return Padding(
+    padding: const EdgeInsets.all(20.0),
+    child: ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (context, index) {
+          return UserItem(
+              name: '${users[index].firstName} ${users[index].lastName}',
+              email: '${users[index].email}',
+              avatar: users[index].avatar,
+              phoneNumber: '${users[index].phoneNumber}');
+        }),
+  );
 }

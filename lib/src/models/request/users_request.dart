@@ -22,7 +22,18 @@ class User {
     firstName = json['first_name'];
     lastName = json['last_name'];
     avatar = json['avatar'];
-    phoneNumber = generateRandomPhoneNumber(); // Generate random phoneNumber
+    phoneNumber = json['phone_number'] ??
+        generateRandomPhoneNumber(); // Generate random phone number if not present
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'first_name': firstName,
+      'last_name': lastName,
+      'email': email,
+      'avatar': avatar,
+      'phone_number': phoneNumber,
+    };
   }
 
   // Method to generate a random 8-digit phoneNumber
