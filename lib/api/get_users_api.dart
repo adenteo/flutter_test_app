@@ -8,17 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 final dio = Dio();
 
 Future<List<User>> fetchUsers() async {
-  final prefs = await SharedPreferences.getInstance();
   // await prefs.remove('users');
-  final String? usersJsonString = prefs.getString('users');
-  debugPrint(usersJsonString);
-  List<User> users = [];
-  if (usersJsonString != null && usersJsonString.isNotEmpty) {
-    final List<dynamic> usersMapList = json.decode(usersJsonString);
-    users = usersMapList.map((userMap) => User.fromJson(userMap)).toList();
+  List<User> users = await getUsersFromPrefs(); // No saved users
+  if (users.isNotEmpty) {
     return users;
   }
-  // No saved users
   final response = await dio.get('https://reqres.in/api/users');
   if (response.statusCode == 200) {
     users =
@@ -27,4 +21,16 @@ Future<List<User>> fetchUsers() async {
   } else {
     throw Exception('Failed to load users');
   }
+}
+
+Future<List<User>> getUsersFromPrefs() async {
+  final prefs = await SharedPreferences.getInstance();
+  final String? usersJsonString = prefs.getString('users');
+  debugPrint(usersJsonString);
+  List<User> users = [];
+  if (usersJsonString != null && usersJsonString.isNotEmpty) {
+    final List<dynamic> usersMapList = json.decode(usersJsonString);
+    users = usersMapList.map((userMap) => User.fromJson(userMap)).toList();
+  }
+  return users;
 }

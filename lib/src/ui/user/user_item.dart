@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserItem extends StatelessWidget {
   const UserItem({
@@ -21,14 +22,14 @@ class UserItem extends StatelessWidget {
     return Column(
       children: [
         _userProfile(avatar, name, email, phoneNumber),
-        _userContactButton(),
+        _userContactButton(phoneNumber),
         const Divider(color: Colors.black),
       ],
     );
   }
 }
 
-Widget _userContactButton() {
+Widget _userContactButton(String phoneNumber) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
@@ -40,8 +41,16 @@ Widget _userContactButton() {
             ),
           ),
         ),
-        onPressed: () {
-          debugPrint('Received Call Click');
+        onPressed: () async {
+          final Uri phoneLaunchUri = Uri(
+            scheme: 'tel',
+            path: '+65 $phoneNumber',
+          );
+          if (await canLaunchUrl(phoneLaunchUri)) {
+            await launchUrl(phoneLaunchUri);
+          } else {
+            throw 'Could not launch $phoneLaunchUri';
+          }
         },
         child: const Text('Call'),
       ),

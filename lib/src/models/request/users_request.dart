@@ -39,8 +39,9 @@ class User {
   // Method to generate a random 8-digit phoneNumber
   String generateRandomPhoneNumber() {
     var rng = Random();
-    var number = '';
-    for (var i = 0; i < 8; i++) {
+    var firstDigit = rng.nextBool() ? 8 : 9;
+    var number = '$firstDigit';
+    for (var i = 0; i < 7; i++) {
       number += rng.nextInt(10).toString();
     }
     return number;

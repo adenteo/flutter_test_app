@@ -38,7 +38,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
             email: event.email,
             avatar: event.image,
           );
-          // TODO: Should only generate a random phone number if the user doesn't have one
           newUser.phoneNumber = newUser
               .generateRandomPhoneNumber(); // Add the new user to the list
           updatedUsers.add(newUser);
@@ -58,16 +57,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 }
 
 Future<void> _storeUserInLocalStorage(User user) async {
-  final prefs = await SharedPreferences.getInstance();
-  final String? usersJsonString = prefs.getString('users');
-  List<User> users = [];
-
-  if (usersJsonString != null && usersJsonString.isNotEmpty) {
-    final List<dynamic> usersMapList = json.decode(usersJsonString);
-    users = usersMapList.map((userMap) => User.fromJson(userMap)).toList();
-  }
+  List<User> users = await getUsersFromPrefs();
   users.add(user);
   final usersMapList = users.map((user) => user.toMap()).toList();
   final usersJson = json.encode(usersMapList);
+  final prefs = await SharedPreferences.getInstance();
   await prefs.setString('users', usersJson);
 }
