@@ -42,7 +42,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
               .generateRandomPhoneNumber(); // Add the new user to the list
           updatedUsers.add(newUser);
 
-          await _storeUserInLocalStorage(newUser);
+          await storeUsersInLocalStorage([newUser]);
 
           // Emit the updated state
           emit(UserLoaded(updatedUsers));
@@ -55,10 +55,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 }
 
-Future<void> _storeUserInLocalStorage(User user) async {
-  List<User> users = await getUsersFromPrefs();
-  users.add(user);
-  final usersMapList = users.map((user) => user.toMap()).toList();
+Future<void> storeUsersInLocalStorage(List<User> users) async {
+  List<User> updatedUsers = await getUsersFromPrefs() + users;
+  final usersMapList = updatedUsers.map((user) => user.toMap()).toList();
   final usersJson = json.encode(usersMapList);
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('users', usersJson);
