@@ -52,6 +52,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         }
       },
     );
+    on<EditUser>((event, emit) => debugPrint("edit user"));
   }
 }
 

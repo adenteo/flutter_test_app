@@ -1,18 +1,22 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_test_app/src/models/request/users_request.dart';
+import 'package:flutter_test_app/src/ui/user/add_edit_user_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserItem extends StatelessWidget {
   const UserItem({
     super.key,
-    required this.name,
+    required this.fName,
+    required this.lName,
     required this.email,
     required this.phoneNumber,
     this.avatar,
   });
 
-  final String name;
+  final String fName;
+  final String lName;
   final String email;
   final String phoneNumber;
   final String? avatar;
@@ -21,7 +25,30 @@ class UserItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _userProfile(avatar, name, email, phoneNumber),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _userProfile(avatar, fName, lName, email, phoneNumber),
+            IconButton(
+                onPressed: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddEditUserItem(
+                                action: "Edit",
+                                user: User(
+                                  firstName: fName,
+                                  lastName: lName,
+                                  email: email,
+                                  avatar: avatar,
+                                  phoneNumber: phoneNumber,
+                                ))),
+                      )
+                    },
+                icon: const Icon(Icons.edit)),
+          ],
+        ),
         _userContactButton(phoneNumber),
         const Divider(color: Colors.black),
       ],
@@ -58,7 +85,7 @@ Widget _userContactButton(String phoneNumber) {
   );
 }
 
-Widget _userProfile(avatar, name, email, phoneNumber) {
+Widget _userProfile(avatar, fName, lName, email, phoneNumber) {
   bool isNetworkImage(String? imagePath) {
     return imagePath != null &&
         (imagePath.startsWith('http://') || imagePath.startsWith('https://'));
@@ -82,7 +109,11 @@ Widget _userProfile(avatar, name, email, phoneNumber) {
       ),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text(name), Text(email), Text('+65 $phoneNumber')],
+        children: [
+          Text(fName + " " + lName),
+          Text(email),
+          Text('+65 $phoneNumber')
+        ],
       ),
     ],
   );

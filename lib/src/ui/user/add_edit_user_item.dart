@@ -4,29 +4,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test_app/src/blocs/events/user_events.dart';
 import 'package:flutter_test_app/src/blocs/user_bloc.dart';
+import 'package:flutter_test_app/src/models/request/users_request.dart';
 import 'package:flutter_test_app/src/validators/user_validator.dart';
 import 'package:image_picker/image_picker.dart'; // Import image_picker package
 
-class AddUserItem extends StatefulWidget {
-  const AddUserItem({super.key});
+class AddEditUserItem extends StatefulWidget {
+  final String action;
+  final User? user;
+
+  const AddEditUserItem({super.key, required this.action, this.user});
 
   @override
-  AddUserItemState createState() => AddUserItemState();
+  AddEditUserItemState createState() => AddEditUserItemState();
 }
 
-class AddUserItemState extends State<AddUserItem> {
+class AddEditUserItemState extends State<AddEditUserItem> {
   final TextEditingController _fnameController = TextEditingController();
   final TextEditingController _lnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  XFile? _image; // For storing the selected image
+  String? _imagePath;
   final _formKey = GlobalKey<FormState>();
   static const double inputFieldWidth = 250.0;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.user != null) {
+      _fnameController.text = widget.user!.firstName!;
+      _lnameController.text = widget.user!.lastName!;
+      _emailController.text = widget.user!.email!;
+      _imagePath = widget.user!.avatar;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Contact'),
+        title: Text(widget.action == 'Add'
+            ? 'Add Contact'
+            : '${widget.user?.firstName} ${widget.user?.lastName}'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -53,7 +70,7 @@ class AddUserItemState extends State<AddUserItem> {
                     const SizedBox(height: 10),
                     _imageUploadSection(),
                     const SizedBox(height: 20),
-                    _createContactButton(context)
+                    _addEditContactButton(context)
                   ],
                 ),
               ),
@@ -76,17 +93,25 @@ class AddUserItemState extends State<AddUserItem> {
       width: inputFieldWidth,
       child: Row(
         children: [
-          _image != null
-              ? (Image.file(
-                  File(_image!.path),
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ))
+          _imagePath != null
+              ? isNetworkImage(_imagePath)
+                  ? Image.network(
+                      _imagePath!,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.file(
+                      File(_imagePath!),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    )
               : const SizedBox(
                   width: 100,
                   height: 100,
-                  child: Center(child: Text('No Image'))),
+                  child: Center(child: Text('No Image')),
+                ),
           const SizedBox(width: 10),
           ElevatedButton(
             onPressed: _pickImage,
@@ -107,12 +132,12 @@ class AddUserItemState extends State<AddUserItem> {
     if (source != null) {
       final XFile? pickedFile = await picker.pickImage(source: source);
       setState(() {
-        _image = pickedFile;
+        _imagePath = pickedFile?.path;
       });
     }
   }
 
-  Widget _createContactButton(BuildContext context) {
+  Widget _addEditContactButton(BuildContext context) {
     return OutlinedButton(
       style: ButtonStyle(
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -127,13 +152,18 @@ class AddUserItemState extends State<AddUserItem> {
           final lname = _lnameController.text;
           final email = _emailController.text;
 
-          context
-              .read<UserBloc>()
-              .add(AddUser(fName, lname, email, _image?.path));
+          context.read<UserBloc>().add(widget.action == "Add"
+              ? AddUser(fName, lname, email, _imagePath)
+              : EditUser(
+                  fName,
+                  lname,
+                  email,
+                  _imagePath,
+                ));
           Navigator.pop(context);
         }
       },
-      child: const Text('Create'),
+      child: Text(widget.action == "Add" ? "Add Contact" : "Save Contact"),
     );
   }
 
@@ -184,4 +214,9 @@ class AddUserItemState extends State<AddUserItem> {
     _emailController.dispose();
     super.dispose();
   }
+}
+
+bool isNetworkImage(String? imagePath) {
+  return imagePath != null &&
+      (imagePath.startsWith('http://') || imagePath.startsWith('https://'));
 }

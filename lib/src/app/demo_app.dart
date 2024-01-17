@@ -5,7 +5,7 @@ import 'package:flutter_test_app/src/blocs/events/user_events.dart';
 import 'package:flutter_test_app/src/blocs/user_bloc.dart';
 import 'package:flutter_test_app/src/blocs/states/user_states.dart';
 import 'package:flutter_test_app/src/models/request/users_request.dart';
-import 'package:flutter_test_app/src/ui/user/add_user_item.dart';
+import 'package:flutter_test_app/src/ui/user/add_edit_user_item.dart';
 import 'package:flutter_test_app/src/ui/user/user_item.dart';
 // import 'package:flutter_test_app/api/get_users_api.dart';
 
@@ -54,7 +54,10 @@ class HomePage extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AddUserItem()),
+              MaterialPageRoute(
+                  builder: (context) => const AddEditUserItem(
+                        action: "Add",
+                      )),
             );
           },
           tooltip: 'Add Contact',
@@ -94,7 +97,8 @@ Widget _userScrollList(BuildContext context, List<User> users) {
           itemCount: users.length,
           itemBuilder: (context, index) {
             return UserItem(
-                name: '${users[index].firstName} ${users[index].lastName}',
+                fName: '${users[index].firstName}',
+                lName: '${users[index].lastName}',
                 email: '${users[index].email}',
                 avatar: users[index].avatar,
                 phoneNumber: '${users[index].phoneNumber}');
