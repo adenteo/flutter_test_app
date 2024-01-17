@@ -128,9 +128,11 @@ class AddEditUserItemState extends State<AddEditUserItem> {
     final ImageSource? source = await _showImageSourceDialog(context);
     if (source != null) {
       final XFile? pickedFile = await picker.pickImage(source: source);
-      setState(() {
-        _imagePath = pickedFile?.path;
-      });
+      if (pickedFile != null) {
+        setState(() {
+          _imagePath = pickedFile.path;
+        });
+      }
     }
   }
 
