@@ -60,6 +60,8 @@ class AddEditUserItemState extends State<AddEditUserItem> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    _imageComponent(),
+                    const SizedBox(height: 30),
                     _contactInput(
                         'First Name*', _fnameController, nameValidator),
                     const SizedBox(height: 10),
@@ -67,8 +69,6 @@ class AddEditUserItemState extends State<AddEditUserItem> {
                         'Last Name*', _lnameController, nameValidator),
                     const SizedBox(height: 10),
                     _contactInput('Email*', _emailController, emailValidator),
-                    const SizedBox(height: 10),
-                    _imageUploadSection(),
                     const SizedBox(height: 20),
                     _addEditContactButton(context)
                   ],
@@ -81,48 +81,45 @@ class AddEditUserItemState extends State<AddEditUserItem> {
     );
   }
 
-  Widget _imageUploadSection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [const Text('Image \nUpload'), _imageComponent()],
-    );
-  }
-
   Widget _imageComponent() {
-    return SizedBox(
-      width: inputFieldWidth,
-      child: Row(
-        children: [
-          _imagePath != null
-              ? isNetworkImage(_imagePath)
-                  ? Image.network(
-                      _imagePath!,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.file(
-                      File(_imagePath!),
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    )
-              : const SizedBox(
-                  width: 100,
-                  height: 100,
-                  child: Center(child: Text('No Image')),
-                ),
-          const SizedBox(width: 10),
-          ElevatedButton(
-            onPressed: _pickImage,
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(20),
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.bottomRight,
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundColor: Colors.grey[200],
+          backgroundImage: _imagePath != null
+              ? (isNetworkImage(_imagePath)
+                  ? NetworkImage(_imagePath!)
+                  : FileImage(File(_imagePath!))) as ImageProvider
+              : null,
+          child: _imagePath == null
+              ? const Text(
+                  'No Image',
+                  style: TextStyle(color: Colors.grey),
+                )
+              : null,
+        ),
+        Positioned(
+          right: -5,
+          bottom: -5,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black, width: 2),
             ),
-            child: const Icon(Icons.add_a_photo),
+            child: GestureDetector(
+              onTap: _pickImage,
+              child: const Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Icon(Icons.edit, color: Colors.black, size: 20),
+              ),
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
