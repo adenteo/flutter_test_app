@@ -12,10 +12,11 @@ class AddUser extends UserEvent {
 }
 
 class EditUser extends UserEvent {
+  final int id;
   final String fname;
   final String lname;
   final String email;
   final String? image;
 
-  EditUser(this.fname, this.lname, this.email, this.image);
+  EditUser(this.id, this.fname, this.lname, this.email, this.image);
 }

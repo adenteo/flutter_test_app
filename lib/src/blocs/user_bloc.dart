@@ -33,6 +33,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
               List<User>.from((state as UserLoaded).users);
           // Create a new User object
           final User newUser = User(
+            id: updatedUsers.length +
+                1, // Will probably use cuid here in production
             firstName: event.fname,
             lastName: event.lname,
             email: event.email,
@@ -42,23 +44,45 @@ class UserBloc extends Bloc<UserEvent, UserState> {
               .generateRandomPhoneNumber(); // Add the new user to the list
           updatedUsers.add(newUser);
 
-          await storeUsersInLocalStorage([newUser]);
+          await storeUsersInLocalStorage(updatedUsers);
 
           // Emit the updated state
           emit(UserLoaded(updatedUsers));
         } else {
-          // Handle the case where users are not yet loaded or there's an error
-          // For example, you might want to fetch the users first or emit an error state
+          emit(UserError());
         }
       },
     );
-    on<EditUser>((event, emit) => debugPrint("edit user"));
+    on<EditUser>(
+      (event, emit) async {
+        if (state is UserLoaded) {
+          final List<User> updatedUsers =
+              List<User>.from((state as UserLoaded).users);
+
+          final index = updatedUsers.indexWhere((user) => user.id == event.id);
+          if (index != -1) {
+            updatedUsers[index].firstName = event.fname;
+            updatedUsers[index].lastName = event.lname;
+            updatedUsers[index].email = event.email;
+            updatedUsers[index].avatar = event.image;
+
+            await storeUsersInLocalStorage(updatedUsers);
+
+            emit(UserLoaded(updatedUsers));
+          } else {
+            // Emit an error or a specific state if the user is not found
+            emit(UserError());
+          }
+        } else {
+          emit(UserError());
+        }
+      },
+    );
   }
 }
 
 Future<void> storeUsersInLocalStorage(List<User> users) async {
-  List<User> updatedUsers = await getUsersFromPrefs() + users;
-  final usersMapList = updatedUsers.map((user) => user.toMap()).toList();
+  final usersMapList = users.map((user) => user.toMap()).toList();
   final usersJson = json.encode(usersMapList);
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('users', usersJson);

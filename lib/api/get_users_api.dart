@@ -14,6 +14,7 @@ Future<List<User>> fetchUsers() async {
 
   // await prefs.remove('users');
   List<User> users = await getUsersFromPrefs();
+  debugPrint("got users from pref");
   if (users.isNotEmpty) {
     return users;
   }
@@ -35,8 +36,13 @@ Future<List<User>> getUsersFromPrefs() async {
   List<User> users = [];
   if (usersJsonString != null && usersJsonString.isNotEmpty) {
     final List<dynamic> usersMapList = json.decode(usersJsonString);
+    debugPrint(usersJsonString);
     users = usersMapList.map((userMap) => User.fromJson(userMap)).toList();
   }
+  // for (final user in users) {
+  //   debugPrint(user.id.toString());
+  // }
+  // debugPrint("reached hee");
   return users;
 }
 

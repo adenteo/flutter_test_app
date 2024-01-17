@@ -1,18 +1,19 @@
 import 'dart:math';
+import 'package:uuid/uuid.dart';
 
 class User {
-  int? id;
-  String? email;
-  String? firstName;
-  String? lastName;
+  late int id;
+  late String email;
+  late String firstName;
+  late String lastName;
   String? avatar;
   String? phoneNumber;
 
   User(
-      {this.id,
-      this.email,
-      this.firstName,
-      this.lastName,
+      {required this.id,
+      required this.email,
+      required this.firstName,
+      required this.lastName,
       this.avatar,
       this.phoneNumber});
 
@@ -28,6 +29,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'first_name': firstName,
       'last_name': lastName,
       'email': email,
@@ -35,6 +37,8 @@ class User {
       'phone_number': phoneNumber,
     };
   }
+
+  var uuid = const Uuid();
 
   // Method to generate a random 8-digit phoneNumber
   String generateRandomPhoneNumber() {

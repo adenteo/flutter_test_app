@@ -97,9 +97,10 @@ Widget _userScrollList(BuildContext context, List<User> users) {
           itemCount: users.length,
           itemBuilder: (context, index) {
             return UserItem(
-                fName: '${users[index].firstName}',
-                lName: '${users[index].lastName}',
-                email: '${users[index].email}',
+                id: users[index].id,
+                fName: users[index].firstName,
+                lName: users[index].lastName,
+                email: users[index].email,
                 avatar: users[index].avatar,
                 phoneNumber: '${users[index].phoneNumber}');
           }),

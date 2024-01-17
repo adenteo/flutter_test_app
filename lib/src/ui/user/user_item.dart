@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 class UserItem extends StatelessWidget {
   const UserItem({
     super.key,
+    required this.id,
     required this.fName,
     required this.lName,
     required this.email,
@@ -15,6 +16,7 @@ class UserItem extends StatelessWidget {
     this.avatar,
   });
 
+  final int id;
   final String fName;
   final String lName;
   final String email;
@@ -38,6 +40,7 @@ class UserItem extends StatelessWidget {
                             builder: (context) => AddEditUserItem(
                                 action: "Edit",
                                 user: User(
+                                  id: id,
                                   firstName: fName,
                                   lastName: lName,
                                   email: email,

@@ -30,9 +30,9 @@ class AddEditUserItemState extends State<AddEditUserItem> {
   void initState() {
     super.initState();
     if (widget.user != null) {
-      _fnameController.text = widget.user!.firstName!;
-      _lnameController.text = widget.user!.lastName!;
-      _emailController.text = widget.user!.email!;
+      _fnameController.text = widget.user!.firstName;
+      _lnameController.text = widget.user!.lastName;
+      _emailController.text = widget.user!.email;
       _imagePath = widget.user!.avatar;
     }
   }
@@ -155,6 +155,7 @@ class AddEditUserItemState extends State<AddEditUserItem> {
           context.read<UserBloc>().add(widget.action == "Add"
               ? AddUser(fName, lname, email, _imagePath)
               : EditUser(
+                  widget.user!.id,
                   fName,
                   lname,
                   email,
