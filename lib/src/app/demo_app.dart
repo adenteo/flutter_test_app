@@ -79,7 +79,8 @@ Widget _blocBody() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showErrorDialog(context, state.errorCode, state.errorMessage);
       });
-      return const Center(child: Text('Error'));
+
+      return _userScrollList(context, []);
     }
     return Container();
   });
@@ -107,24 +108,29 @@ Widget _userScrollList(BuildContext context, List<User> users) {
   return Padding(
     padding: const EdgeInsets.all(20.0),
     child: RefreshIndicator(
-      onRefresh: () async {
-        await clearUsersFromPrefs();
-        if (!context.mounted) {
-          return;
-        }
-        context.read<UserBloc>().add(FetchUsers());
-      },
-      child: ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            return UserItem(
-                id: users[index].id,
-                fName: users[index].firstName,
-                lName: users[index].lastName,
-                email: users[index].email,
-                avatar: users[index].avatar,
-                phoneNumber: '${users[index].phoneNumber}');
-          }),
-    ),
+        onRefresh: () async {
+          await clearUsersFromPrefs();
+          if (!context.mounted) {
+            return;
+          }
+          context.read<UserBloc>().add(FetchUsers());
+        },
+        child: users.isNotEmpty
+            ? ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  return UserItem(
+                      id: users[index].id,
+                      fName: users[index].firstName,
+                      lName: users[index].lastName,
+                      email: users[index].email,
+                      avatar: users[index].avatar,
+                      phoneNumber: '${users[index].phoneNumber}');
+                })
+            : ListView(
+                children: const [
+                  Text('Error loading users. Please try again.')
+                ],
+              )),
   );
 }

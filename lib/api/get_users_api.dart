@@ -10,16 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 final dio = Dio(); // Note to use a singleton next time.
 
 Future<List<User>> fetchUsers() async {
+  await clearUsersFromPrefs();
   List<User> users = await getUsersFromPrefs();
-  debugPrint("got users from pref");
   if (users.isNotEmpty) {
     return users;
   }
-  debugPrint("fetching from api");
   try {
     final response = await dio.get('https://reqres.in/api/users');
     if (response.statusCode == 200) {
-      debugPrint("got response");
       users =
           (response.data['data'] as List).map((e) => User.fromJson(e)).toList();
       await storeUsersInLocalStorage(users);
@@ -45,13 +43,8 @@ Future<List<User>> getUsersFromPrefs() async {
   List<User> users = [];
   if (usersJsonString != null && usersJsonString.isNotEmpty) {
     final List<dynamic> usersMapList = json.decode(usersJsonString);
-    debugPrint(usersJsonString);
     users = usersMapList.map((userMap) => User.fromJson(userMap)).toList();
   }
-  // for (final user in users) {
-  //   debugPrint(user.id.toString());
-  // }
-  // debugPrint("reached hee");
   return users;
 }
 
