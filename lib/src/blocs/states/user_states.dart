@@ -11,4 +11,8 @@ class UserLoaded extends UserState {
   UserLoaded(this.users);
 }
 
-class UserError extends UserState {}
+class UserError extends UserState {
+  final String errorMessage;
+  final int errorCode;
+  UserError(this.errorCode, this.errorMessage);
+}

@@ -76,10 +76,31 @@ Widget _blocBody() {
     } else if (state is UserLoaded) {
       return _userScrollList(context, state.users);
     } else if (state is UserError) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showErrorDialog(context, state.errorCode, state.errorMessage);
+      });
       return const Center(child: Text('Error'));
     }
     return Container();
   });
+}
+
+void _showErrorDialog(BuildContext context, int code, String message) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(code.toString()),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
 }
 
 Widget _userScrollList(BuildContext context, List<User> users) {

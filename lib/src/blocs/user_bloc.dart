@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import "package:flutter/material.dart";
 import "package:flutter_test_app/api/get_users_api.dart";
+import 'package:flutter_test_app/src/exceptions/fetch_users_exception.dart';
 import 'package:flutter_test_app/src/models/request/users_request.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,9 +19,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserLoading());
         try {
           final users = await fetchUsers();
-          emit(UserLoaded(users));
+          if (users.isEmpty) {
+            emit(UserError(404, "No users found"));
+          } else {
+            emit(UserLoaded(users));
+          }
+        } on FetchUsersException catch (e) {
+          emit(UserError(e.errorCode, e.errorMessage));
         } catch (e) {
-          emit(UserError());
+          emit(UserError(500, "Unexpected error: $e"));
         }
       },
     );
@@ -49,7 +56,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           // Emit the updated state
           emit(UserLoaded(updatedUsers));
         } else {
-          emit(UserError());
+          emit(UserError(1, "No users loaded in current state"));
         }
       },
     );
@@ -70,11 +77,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
             emit(UserLoaded(updatedUsers));
           } else {
-            // Emit an error or a specific state if the user is not found
-            emit(UserError());
+            emit(UserError(2, "User profile not found"));
           }
         } else {
-          emit(UserError());
+          emit(UserError(1, "No users loaded in current state"));
         }
       },
     );
